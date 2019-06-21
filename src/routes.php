@@ -4,9 +4,22 @@ use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Credentials: true");
+header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: content-type');
+header('Allow: GET, PUT, POST, DELETE, OPTIONS');
+
 return function (App $app) {
     $container = $app->getContainer();
     $container->db;
+    $app->options('*',function (Request $request, Response $response, array $args){
+
+        return $response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    });
 
     $app->get('/teams', function (Request $request, Response $response, array $args) use ($container) {
         //echo json_encode(\Zirve\Models\Section::all());
