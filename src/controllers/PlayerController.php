@@ -30,39 +30,40 @@ class PlayerController extends Base
 
     public function get(Request $request, Response $response, $args)
     {
-        $response->write(
-            Player::find($args)->first()
-        );
+        return $response->withJson(Player::find($args)->first());
     }
 
     public function getall(Request $request, Response $response, $args)
     {
-        $response->write(
-            Player::all()
-        );
+        return $response->withJson(Player::all() );
     }
 
     public function delete(Request $request, Response $response, $args)
     {
         $player = Player::find($args)->first();
         if (!$player) {
-            return $response->write("")->withStatus(404);
+            return $response->withJson([])->withStatus(404);
         }
         $player->delete();
-        return $response->write("")->withStatus(204);
+
+        return $response->withJson( $player);
     }
 
     public function put(Request $request, Response $response, $args)
     {
         $player = Player::find($args)->first();
         if (!$player) {
-            return $response->write("")->withStatus(404);
+            return $response->withJson([])->withStatus(404);
         }
         $this->applyRequestToPlayer($request, $player);
-        $player->save();
-        $response->write(
-            $player
-        );
+        try{
+            $player->save();
+            return $response->withJson( $player);
+        }catch (\Exception $e){
+            return $response->withJson( [
+                "message" => "İşlem sırasında bir hata oluştu"
+            ] )->withStatus(400);
+        }
     }
 
     protected function applyRequestToPlayer(Request $request, &$player)
