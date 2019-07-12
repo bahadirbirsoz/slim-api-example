@@ -13,7 +13,7 @@ header('Allow: GET, PUT, POST, DELETE, OPTIONS');
 return function (App $app) {
     $container = $app->getContainer();
     $container->db;
-    $app->options('*',function (Request $request, Response $response, array $args){
+    $app->options('*', function (Request $request, Response $response, array $args) {
 
         return $response
             ->withHeader('Access-Control-Allow-Origin', '*')
@@ -39,10 +39,10 @@ return function (App $app) {
         return $response->withJson($team);
     });
 
-    $app->delete('/team/{id}',function (Request $request, Response $response, $args){
+    $app->delete('/team/{id}', function (Request $request, Response $response, $args) {
         $team = \Zirve\Models\Team::find($args)->first();
-        if(!$team){
-            return $response->withJson([],404);
+        if (!$team) {
+            return $response->withJson([], 404);
         }
         $team->delete();
         return $response->withJson($team);
@@ -53,8 +53,8 @@ return function (App $app) {
         $body = $request->getParsedBody();
 
         $team = \Zirve\Models\Team::find($args)->first();
-        if(!$team){
-            return $response->withJson([],404);
+        if (!$team) {
+            return $response->withJson([], 404);
         }
         $team->team = $body['team'];
         $team->save();
@@ -62,10 +62,21 @@ return function (App $app) {
     });
 
 
-    $app->get('/players', \Zirve\Controllers\PlayerController::class.':getall' );
-    $app->get('/player/{id}', \Zirve\Controllers\PlayerController::class.':get' );
-    $app->post('/player', \Zirve\Controllers\PlayerController::class.':post' );
-    $app->put('/player/{id}', \Zirve\Controllers\PlayerController::class.':put' );
-    $app->delete('/player/{id}', \Zirve\Controllers\PlayerController::class.':delete' );
+    $app->get('/me', function (Request $request, Response $response, array $args) use ($container) {
+        /** @var  \Zirve\Plugins\Auth $auth */
+        $auth = $container["auth"];
+        $token = $auth->getToken();
+        $token->user;
+        return $response->withJson($token);
+    });
+    $app->post('/token', \Zirve\Controllers\TokenController::class . ':post');
+
+
+    $app->get('/players', \Zirve\Controllers\PlayerController::class . ':getall');
+
+    $app->get('/player/{id}', \Zirve\Controllers\PlayerController::class . ':get');
+    $app->post('/player', \Zirve\Controllers\PlayerController::class . ':post');
+    $app->put('/player/{id}', \Zirve\Controllers\PlayerController::class . ':put');
+    $app->delete('/player/{id}', \Zirve\Controllers\PlayerController::class . ':delete');
 
 };

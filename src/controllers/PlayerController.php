@@ -35,7 +35,7 @@ class PlayerController extends Base
 
     public function getall(Request $request, Response $response, $args)
     {
-        return $response->withJson(Player::all() );
+        return $response->withJson(Player::all());
     }
 
     public function delete(Request $request, Response $response, $args)
@@ -46,7 +46,7 @@ class PlayerController extends Base
         }
         $player->delete();
 
-        return $response->withJson( $player);
+        return $response->withJson($player);
     }
 
     public function put(Request $request, Response $response, $args)
@@ -56,13 +56,13 @@ class PlayerController extends Base
             return $response->withJson([])->withStatus(404);
         }
         $this->applyRequestToPlayer($request, $player);
-        try{
+        try {
             $player->save();
-            return $response->withJson( $player);
-        }catch (\Exception $e){
-            return $response->withJson( [
+            return $response->withJson($player);
+        } catch (\Exception $e) {
+            return $response->withJson([
                 "message" => "İşlem sırasında bir hata oluştu"
-            ] )->withStatus(400);
+            ])->withStatus(400);
         }
     }
 

@@ -23,4 +23,8 @@ return function (App $app) {
         return $capsule;
     };
 
+    $container['auth'] = function ($container) {
+        return new \Zirve\Plugins\Auth();
+    };
+
 };

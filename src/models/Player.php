@@ -15,9 +15,13 @@ class Player extends Model
 {
 
     protected $id;
-    protected $team_id;
     protected $name;
     protected $number;
+
+    public function teams()
+    {
+        return $this->belongsTo("Zirve\Models\Team");
+    }
 
 
 }

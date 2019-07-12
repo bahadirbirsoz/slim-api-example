@@ -15,4 +15,11 @@ class Team extends Model
 {
     protected $id;
     protected $team;
+
+    public function players()
+    {
+        return $this->hasMany("\Zirve\Models\Player");
+    }
+
+
 }
