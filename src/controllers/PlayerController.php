@@ -35,6 +35,11 @@ class PlayerController extends Base
 
     public function getall(Request $request, Response $response, $args)
     {
+
+        if(!$this->auth()->isUser()){
+            return $response->withStatus(401);
+        }
+
         return $response->withJson(Player::all());
     }
 
