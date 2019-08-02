@@ -26,7 +26,6 @@ return function (App $app) {
     });
 
     $app->get('/players', \Zirve\Controllers\PlayerController::class . ':getall');
-
     $app->get('/player/{id}', \Zirve\Controllers\PlayerController::class . ':get');
     $app->post('/player', \Zirve\Controllers\PlayerController::class . ':post');
     $app->put('/player/{id}', \Zirve\Controllers\PlayerController::class . ':put');
@@ -44,6 +43,11 @@ return function (App $app) {
     });
 
     $app->post('/team', function (Request $request, Response $response, array $args) use ($container) {
+
+        if(!$this->auth()->isUser()){
+            return $response->withStatus(401);
+        }
+
         $body = $request->getParsedBody();
         $team = new \Zirve\Models\Team();
         $team->team = $body['team'];
@@ -52,6 +56,11 @@ return function (App $app) {
     });
 
     $app->delete('/team/{id}', function (Request $request, Response $response, $args) {
+
+        if(!$this->auth()->isUser()){
+            return $response->withStatus(401);
+        }
+
         $team = \Zirve\Models\Team::find($args)->first();
         if (!$team) {
             return $response->withJson([], 404);
@@ -62,6 +71,11 @@ return function (App $app) {
 
 
     $app->put('/team/{id}', function (Request $request, Response $response, array $args) use ($container) {
+
+        if(!$this->auth()->isUser()){
+            return $response->withStatus(401);
+        }
+
         $body = $request->getParsedBody();
 
         $team = \Zirve\Models\Team::find($args)->first();

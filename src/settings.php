@@ -19,7 +19,7 @@ return [
         'db' => [
             'driver' => 'mysql',
             'host' => 'localhost',
-            'database' => 'insider',
+            'database' => 'modernweb',
             'username' => 'root',
             'password' => '',
             'charset'   => 'utf8',

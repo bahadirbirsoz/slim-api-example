@@ -18,6 +18,11 @@ class PlayerController extends Base
 
     public function post(Request $request, Response $response)
     {
+
+        if(!$this->auth()->isUser()){
+            return $response->withStatus(401);
+        }
+
         $player = new Player();
 
         $this->applyRequestToPlayer($request, $player);
@@ -36,15 +41,18 @@ class PlayerController extends Base
     public function getall(Request $request, Response $response, $args)
     {
 
-        if(!$this->auth()->isUser()){
-            return $response->withStatus(401);
-        }
 
-        return $response->withJson(Player::all());
+
+        return $response->withJson(Player::query()->where($request->getQueryParams() )->get());
     }
 
     public function delete(Request $request, Response $response, $args)
     {
+
+        if(!$this->auth()->isUser()){
+            return $response->withStatus(401);
+        }
+
         $player = Player::find($args)->first();
         if (!$player) {
             return $response->withJson([])->withStatus(404);
@@ -56,6 +64,11 @@ class PlayerController extends Base
 
     public function put(Request $request, Response $response, $args)
     {
+
+        if(!$this->auth()->isUser()){
+            return $response->withStatus(401);
+        }
+
         $player = Player::find($args)->first();
         if (!$player) {
             return $response->withJson([])->withStatus(404);
